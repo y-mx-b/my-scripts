@@ -1,0 +1,35 @@
+#!/bin/zsh
+
+# script.sh [number of images]
+
+# get files into array
+IFS=$'\n' FILE_ARRAY=($(find . -maxdepth 1 -type f | sort | grep jpg))
+# IFS=$'\n' FILE_ARRAY=($(ls | sort | grep jpg))
+# number of files to stitch per image
+
+# check to make sure argument was provided
+# if there is no argument, set it by default
+if [[ $1 -eq 0 ]]
+then
+MAX_NUM=$(( $#FILE_ARRAY / 7 ))
+else
+MAX_NUM=$(( $#FILE_ARRAY / $1 ))
+fi
+
+COUNT=0
+BASE=0
+
+mkdir STITCHED
+for i ("$FILE_ARRAY[@]")
+do
+    COUNT=$(( COUNT + 1 ))
+    if [[ $(( COUNT % MAX_NUM )) -eq 1 ]]
+    then
+        BASE=$(( $BASE + 1 ))
+        OUTPUT="./STITCHED/$BASE.jpg"
+        convert $i -append $OUTPUT
+    else
+        OUTPUT="./STITCHED/$BASE.jpg"
+        convert $OUTPUT $i -append $OUTPUT
+    fi
+done
