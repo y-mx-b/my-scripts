@@ -1,0 +1,100 @@
+#!/bin/sh
+
+### VARIABLES
+PROJECT_TYPE=$1
+PROJECT_NAME=$2
+CAP_PROJECT_NAME=$(echo "$PROJECT_NAME" | tr '[:lower:]' '[:upper:]')
+
+### BOILERPLATE
+CMAIN="#include <stdio.h>
+
+int main(int argc, char **argv) {
+
+  return 0;
+}"
+LIBH="#ifndef __${CAP_PROJECT_NAME}_H__
+#define __${CAP_PROJECT_NAME}_H__
+
+#endif"
+EMAKE="CC=clang
+CFLAGS=-Wall -g
+all: ${PROJECT_NAME}
+
+${PROJECT_NAME}.o: src/main.c
+\t\$(CC) \$(CFLAGS) -c src/main.c -o ${PROJECT_NAME}.o
+
+${PROJECT_NAME}: ${PROJECT_NAME}.o
+\t\$(CC) \$(CFLAGS) -o \$@ $^
+
+clean:
+\trm *.o ${PROJECT_NAME}
+"
+LIBMAKE="CC=clang
+CFLAGS=-Wall -g
+all: libtest
+
+lib${PROJECT_NAME}.o: src/lib${PROJECT_NAME}.c
+\t\$(CC) \$(CFLAGS) -c src/lib${PROJECT_NAME}.c
+
+lib${PROJECT_NAME}.dSYM: src/lib${PROJECT_NAME}.c src/${PROJECT_NAME}.h
+\t\$(CC) \$(CFLAGS) -fPIC -shared -o \$@ src/lib${PROJECT_NAME}.c -l
+
+libtest: lib${PROJECT_NAME}.o src/lib${PROJECT_NAME}.c tests/test.c
+\t\$(CC) \$(CFLAGS) -o \$@ $^
+
+clean:
+\trm -rf *.o *.dSYM libtest
+"
+
+### INIT FUNCTIONS
+init() {
+  mkdir "$PROJECT_NAME"
+  mkdir "$PROJECT_NAME/src"
+  mkdir "$PROJECT_NAME/tests"
+}
+
+lib() {
+  echo "$LIBH" >"$PROJECT_NAME/src/$PROJECT_NAME.h"
+  touch "$PROJECT_NAME/src/lib$PROJECT_NAME.c"
+  echo "$CMAIN" >"$PROJECT_NAME/tests/test.c"
+  echo "$LIBMAKE" >"$PROJECT_NAME/Makefile"
+}
+
+ex() {
+  mkdir "$PROJECT_NAME/include"
+  mkdir "$PROJECT_NAME/lib"
+  echo "$CMAIN" >"$PROJECT_NAME/src/main.c"
+  echo "$EMAKE" >"$PROJECT_NAME/Makefile"
+}
+
+if [[ ( ! -z $PROJECT_TYPE ) && ( ! -z $PROJECT_NAME ) ]]; then
+  init
+elif [[ $1 = "-h" || $1 = "--help" || $1 = "h" || $1 = "help" ]]; then
+  echo "USAGE: cproj <type> <name>
+ARGUMENTS:
+  <type>\t\tThe type of project to create.
+  \t\t\t[library, executable]
+  <name>\t\tThe name of the project.
+
+EXAMPLE:
+\tcproj l mylib
+\tcproj e myexec"
+  exit
+else
+  echo "Invalid arguments."
+  exit
+fi
+
+case $PROJECT_TYPE in
+  l | lib | library)
+    echo "Initializing library project."
+    lib
+    ;;
+  e | exec | executable)
+    echo "Initializing executable project."
+    ex
+    ;;
+  *)
+    echo "Invalid project type."
+  ;;
+esac
