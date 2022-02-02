@@ -9,9 +9,9 @@ dirs[onebook]="$HOME/git-dir/Public Projects/Bookmark Management/onebook/"
 dirs[raylib]="$HOME/git-dir/Personal Projects/learning/c/raylib/"
 
 for proj in $projects; do
-	tmux new-session -d -s $proj
+	tmux new-session -s $proj -d -x- -y-
 	tmux rename-window -t $proj:0 'Main'
-	tmux split-window -t $proj:0 -p 25
+	tmux split-window -t $proj:0 -l 12
 	sleep 0.3
 	tmux send-keys -t $proj:0.0 "cd \"$dirs[$proj]\"" Enter
 	tmux send-keys -t $proj:0.1 "cd \"$dirs[$proj]\"" Enter
