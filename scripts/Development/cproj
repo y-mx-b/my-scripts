@@ -36,7 +36,10 @@ all: libtest
 lib${PROJECT_NAME}.o: src/lib${PROJECT_NAME}.c
 \t\$(CC) \$(CFLAGS) -c src/lib${PROJECT_NAME}.c
 
-lib${PROJECT_NAME}.dSYM: src/lib${PROJECT_NAME}.c src/${PROJECT_NAME}.h
+lib${PROJECT_NAME}.a: lib${PROJECT_NAME}.o
+\tar rcs lib${PROJECT_NAME}.a lib${PROJECT_NAME}.o
+
+libdy${PROJECT_NAME}.dSYM: src/lib${PROJECT_NAME}.c src/${PROJECT_NAME}.h
 \t\$(CC) \$(CFLAGS) -fPIC -shared -o \$@ src/lib${PROJECT_NAME}.c -l
 
 libtest: lib${PROJECT_NAME}.o src/lib${PROJECT_NAME}.c tests/test.c
