@@ -1,13 +1,14 @@
 #!/bin/zsh
 
-projects=(aarch64 bparser cops onebook raylib fentml)
+projects=(aarch64 bparser cops onebook raylib fentml fenls)
 declare -A dirs
 dirs[aarch64]="$HOME/git-dir/Personal Projects/learning/arm64"
-dirs[bparser]="$HOME/git-dir/Public Projects/Bookmark Management/BookmarkParser/"
-dirs[cops]="$HOME/git-dir/Public Projects/C Libraries/cops/"
-dirs[onebook]="$HOME/git-dir/Public Projects/Bookmark Management/onebook/"
-dirs[raylib]="$HOME/git-dir/Personal Projects/learning/c/raylib/"
-dirs[fentml]="$HOME/git-dir/Public Projects/Fentml/"
+dirs[bparser]="$HOME/git-dir/Public Projects/Bookmark Management/BookmarkParser"
+dirs[cops]="$HOME/git-dir/Public Projects/C Libraries/cops"
+dirs[onebook]="$HOME/git-dir/Public Projects/Bookmark Management/onebook"
+dirs[raylib]="$HOME/git-dir/Personal Projects/learning/c/raylib"
+dirs[fentml]="$HOME/git-dir/Public Projects/Fentml"
+dirs[fenls]="$HOME/git-dir/Public Projects/fenls"
 
 for proj in $projects; do
 	tmux new-session -s $proj -d -x- -y-
