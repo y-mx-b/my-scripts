@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-# script.sh [number of images]
+# image-stitcher [number of images]
 
 # get files into array
 IFS=$'\n' FILE_ARRAY=($(find . -maxdepth 1 -type f | sort | grep jpg))
