@@ -1,7 +1,15 @@
 #!/bin/zsh
 
-# Change to directory containing your scripts
-SCRIPT=$(ls $HOME/git-dir/my-scripts/scripts | choose); $SCRIPT
+scriptDirectoriesArr=( $( realpath ./*/*/ ) )
+scriptCategoriesArr=( $( echo ${scriptDirectoriesArr[@]} | tr " " "\n" | awk -F/ '{print $NF}' ) )
+category=$( echo ${scriptCategoriesArr[@]} | tr " " "\n" | choose )
 
-# Organize scripts into separate categories
-# Have an option to list all scripts anyway
+for dir in $scriptDirectoriesArr
+do 
+  var=$(echo $dir | awk -F/ '{print $NF}')
+  if [[ "$var" == "$category" ]]
+  then 
+    script=$dir/$(ls $dir | choose)
+    $script
+  fi
+done
