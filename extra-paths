@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+#### NOTE: THIS SCRIPT MUST BE EXCUTED WITH SUDO #####
+#
+# Source this file in your shell config file 
+alias realpath=/usr/local/bin/realpath
+dirArray=(*/ ./*/*)
+# use file globbing to put subdirectorites of ./scripts into an array
+
+declare -i dirCount=0
+# if sh/bash, use 0
+# if zsh, use 1
+
+for dir in "${dirArray[@]}"
+do 
+  realDirPath=$(realpath $dir)
+  dirArray[$dirCount]=$realDirPath
+  dirCount+=1
+done
+
+echo ${dirArray[@]} | tr " " "\n" >> /etc/paths.d/my-scripts
