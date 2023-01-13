@@ -14,12 +14,11 @@ for proj dir in "${(@kv)dirs}"; do
 	tmux new-session -s $proj -d -x- -y-
 	tmux rename-window -t $proj:0 'Main'
 	tmux split-window -t $proj:0 -l 12
-	# tmux resize-pane -t $proj:0.1 -y 12
 	sleep 0.3
 	tmux send-keys -t $proj:0.0 "cd \"$dir\"" Enter
 	tmux send-keys -t $proj:0.1 "cd \"$dir\"" Enter
 	tmux send-keys -t $proj:0.0 "clear" Enter
 	tmux send-keys -t $proj:0.1 "clear" Enter
-	# tmux send-keys -t $proj:0.0 "nvim" Enter
-	# git -C "$dir" rev-parse 2>/dev/null && tmux send-keys -t $proj:0.1 "onefetch" Enter
+	tmux send-keys -t $proj:0.0 "nvim" Enter
+	git -C "$dir" rev-parse 2>/dev/null && tmux send-keys -t $proj:0.1 "onefetch" Enter
 done
