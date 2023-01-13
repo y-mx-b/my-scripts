@@ -1,0 +1,24 @@
+#!/bin/zsh
+
+#### Print pass items to files ####
+
+### define variables
+plist=$HOME/.pass-list.txt
+pacclist=$HOME/.pass-acc-list.txt
+
+### put accounts and category names in a file together
+find ~/.password-store/ -type f | sed -e 's,'"$HOME\/\.password\-store\/"',,' >$plist
+# remove .gpg-id
+sed -i '' -e '/id/d' $plist
+# remove .gitattributes
+sed -i '' -e '/.git/d' $plist
+# remove the .gpg off each item
+sed -i '' -e 's/.gpg//g' $plist
+
+### put account name only in a file 
+cat $plist | sed -e 's/\/.*\///g' >$pacclist
+sed -i '' -e 's/\/.*\///g' $pacclist
+
+### Commit passwords and upload to GitHub
+git -C ~/.password-store commit -m "Updated list"
+git -C ~/.password-store push -u origin master

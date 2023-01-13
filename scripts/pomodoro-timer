@@ -1,0 +1,4 @@
+#!/bin/zsh
+
+# format: pomodoro-timer [work time] [break time]
+

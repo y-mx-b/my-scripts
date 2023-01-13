@@ -1,0 +1,12 @@
+#!/bin/zsh
+
+VAR=$(ls | choose | sed -e 's/\ /\\\ /g')
+
+VAR2=$VAR
+
+VAR=$(ls ~/$VAR/ | choose)
+
+ls ~/$VAR2/$VAR/ | choose
+
+echo $VAR
+echo $VAR2

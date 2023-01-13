@@ -1,0 +1,4 @@
+#!/bin/zsh
+
+# Change to directory containing your scripts
+SCRIPT=$(ls $HOME/git-dir/my-scripts/scripts | choose); $SCRIPT
