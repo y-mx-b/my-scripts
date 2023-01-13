@@ -1,5 +1,6 @@
 #!/bin/zsh
 
+cd $( realpath $0 | sed -e 's/choose-scripts-category//g' )
 scriptDirectoriesArr=( $( realpath ./*/*/ ) )
 scriptCategoriesArr=( $( echo ${scriptDirectoriesArr[@]} | tr " " "\n" | awk -F/ '{print $NF}' ) )
 category=$( echo ${scriptCategoriesArr[@]} | tr " " "\n" | choose )
