@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+cd $( realpath $0 | sed -e 's/choose-scripts-list//g' )
+
+allScriptsFullArray=( $(find ./*/ -type f -perm +111 | grep script | awk -F/ '{print $NF}' ) )
+script=$(echo $allScriptsFullArray | tr " " "\n" | choose)
+$(find ./*/ -type f -perm +111 | grep $script)
