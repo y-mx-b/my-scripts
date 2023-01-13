@@ -1,24 +1,25 @@
 #!/bin/zsh
 
-projects=(aarch64 bparser cops onebook raylib fentml fenls)
 declare -A dirs
-dirs[aarch64]="$HOME/git-dir/Personal Projects/learning/arm64"
-dirs[bparser]="$HOME/git-dir/Public Projects/Bookmark Management/BookmarkParser"
-dirs[cops]="$HOME/git-dir/Public Projects/C Libraries/cops"
-dirs[onebook]="$HOME/git-dir/Public Projects/Bookmark Management/onebook"
-dirs[raylib]="$HOME/git-dir/Personal Projects/learning/c/raylib"
-dirs[fentml]="$HOME/git-dir/Public Projects/Fentml"
-dirs[fenls]="$HOME/git-dir/Public Projects/fenls"
 
-for proj in $projects; do
-	tmux new-session -s $proj -d -x- -y-
+IFS=$'\n'
+set -f
+for i in $(cat $HOME/.projects); do
+	pname=$(echo $i | awk -F" : " '{ print $1 }')
+	pdir=$(echo $i | awk -F" : " '{ print $2  }' | sed "s#\$HOME#$HOME#g" | sed "s#\~#$HOME#g")
+	dirs[$pname]=$pdir
+done
+
+for proj dir in "${(@kv)dirs}"; do
+	tmux new-session -s $proj -d -x $COLUMNS -y $LINES
 	tmux rename-window -t $proj:0 'Main'
 	tmux split-window -t $proj:0 -l 12
+	# tmux resize-pane -t $proj:0.1 -y 12
 	sleep 0.3
-	tmux send-keys -t $proj:0.0 "cd \"$dirs[$proj]\"" Enter
-	tmux send-keys -t $proj:0.1 "cd \"$dirs[$proj]\"" Enter
+	tmux send-keys -t $proj:0.0 "cd \"$dir\"" Enter
+	tmux send-keys -t $proj:0.1 "cd \"$dir\"" Enter
 	tmux send-keys -t $proj:0.0 "clear" Enter
 	tmux send-keys -t $proj:0.1 "clear" Enter
-	tmux send-keys -t $proj:0.0 "nvim" Enter
-	git -C "$dirs[$proj]" rev-parse 2>/dev/null && tmux send-keys -t $proj:0.1 "onefetch" Enter
+	# tmux send-keys -t $proj:0.0 "nvim" Enter
+	# git -C "$dir" rev-parse 2>/dev/null && tmux send-keys -t $proj:0.1 "onefetch" Enter
 done
