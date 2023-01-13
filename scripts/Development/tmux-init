@@ -11,7 +11,7 @@ for i in $(cat $HOME/.projects); do
 done
 
 for proj dir in "${(@kv)dirs}"; do
-	tmux new-session -s $proj -d -x $COLUMNS -y $LINES
+	tmux new-session -s $proj -d -x- -y-
 	tmux rename-window -t $proj:0 'Main'
 	tmux split-window -t $proj:0 -l 12
 	# tmux resize-pane -t $proj:0.1 -y 12
