@@ -2,3 +2,6 @@
 
 # Change to directory containing your scripts
 SCRIPT=$(ls $HOME/git-dir/my-scripts/scripts | choose); $SCRIPT
+
+# Organize scripts into separate categories
+# Have an option to list all scripts anyway
