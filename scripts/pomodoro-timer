@@ -1,4 +1,76 @@
 #!/bin/zsh
 
-# format: pomodoro-timer [work time] [break time]
+# Format: pomodoro-timer [flag] [work time] [break time]
 
+##### Declarations
+### Variables
+timeUnit="sec"
+flag=$1
+workTime=$2
+breakTime=$3
+timeConcat="$2$3"
+alarm="$HOME/Downloads/Internet/hillside_-_ios_7.mp3"
+### Functions
+displayHelpMessage() {
+	echo "Usage: pomodoro-timer [flags] [work time] [break time]"
+	echo
+	echo "A utility to set a pomodoro timer. Arguments must be integers."
+	echo
+	echo "     -h | --help        Returns this help message"
+	echo "     -s | --seconds     Take argument in seconds"
+	echo "     -m | --minutes     Take argument in minutes"
+}
+echoError() {
+    >&2 echo $@;
+    exit 1
+}
+
+setTimeUnitToMinutes() {
+	timeUnit="min"
+    workTime=$(( $workTime * 60 )) 2>/dev/null
+    breakTime=$(( $workTime * 60 )) 2>/dev/null
+}
+
+checkFlag() {
+    # Check flags
+    case $flag in
+        "-h" || "--help")
+            displayHelpMessage
+            exit 0
+            ;;
+        "-s" || "--seconds")
+            # timeUnit is "sec" by default
+            ;;
+        "-m" || "--minutes")
+            setTimeUnitToMinutes
+            ;;
+        *)
+            echoError "Error: Invalid flag. Run 'pomodoro-timer --help' for help."
+            ;;
+    esac
+}
+checkArg() {
+    # Check arguments for integers
+    if [ ! "$timeConcat" -eq "$timeConcat" ] 2>/dev/null; then
+        echoError "Error: Invalid arguments. Run 'pomodoro-timer --help' for help."
+        exit 1
+    fi
+    # Check if arguments are empty
+    # if [ -z "$workTime" ] || [ -z "$breaktime" ]; then
+        # echoError "Error: Empty argument(s). Run 'pomodoro-timer --help' for help."
+    # fi
+}
+
+pTimerManager() {
+    sleep $workTime
+    afplay $alarm
+    sleep $breakTime
+    afplay $alarm
+    pTimerManager
+}
+
+##### Actual code, super difficult
+### Check all flags and arguments
+checkFlag
+checkArg
+pTimerManager
