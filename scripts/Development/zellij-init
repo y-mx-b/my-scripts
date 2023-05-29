@@ -1,0 +1,12 @@
+#!/bin/zsh
+
+IFS=$'\n'
+set -f
+for i in $(cat $HOME/.config/zellij/projects); do
+	layout=$(echo $i | awk -F" : " '{ print $1 }')
+	name=$(echo $i | awk -F" : " '{ print $2 }')
+	dir=$(echo $i | awk -F" : " '{ print $3  }' | sed "s#\$HOME#$HOME#g" | sed "s#\~#$HOME#g")
+        
+        cd $dir && zellij --layout $layout -s $name
+done
+
